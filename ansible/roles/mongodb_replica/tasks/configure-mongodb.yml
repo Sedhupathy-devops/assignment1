@@ -1,0 +1,28 @@
+- name: "CONFIGURE_MONGODB | Ensure db_path dir exists"
+  file:
+    path: "{{ db_path }}"
+    state: directory
+    owner: "{{ mongodb_user }}"
+    group: "{{ mongodb_group }}"
+
+- name: "CONFIGURE_MONGODB | Copy config file"
+  template:
+    src: ./templates/mongod.conf.j2
+    dest: /etc/mongod.conf
+    owner: "{{ mongodb_user }}"
+    group: "{{ mongodb_group }}"
+  notify: "restart mongodb"
+
+- name: "CONFIGURE_MONGODB | Copy keyfile to host"
+  copy:
+    content: |
+      {{ openssl_keyfile_content }}
+    dest: "{{ openssl_keyfile_path }}"
+    owner: "{{ mongodb_user }}"
+    group: "{{ mongodb_group }}"
+    mode: 0400
+  when: authorization == "enabled"
+  notify: "restart mongodb"
+
+- name: Flush Handlers
+  meta: flush_handlers

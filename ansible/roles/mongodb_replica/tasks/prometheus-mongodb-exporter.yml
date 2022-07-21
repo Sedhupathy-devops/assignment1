@@ -1,0 +1,14 @@
+---
+- name: "MONGODB-EXPORTER | download node exporter"
+  apt: 
+   name: prometheus-mongodb-exporter
+   state: present
+
+- name: "MONGODB-EXPORTER | configure prometheus-mongodb-exporter"
+  template:
+    src: templates/prometheus-mongodb-exporter.j2
+    dest: /etc/default/prometheus-mongodb-exporter
+    owner: root
+    group: root
+    mode: 0644
+  notify: "restart prometheus-mongodb-exporter"

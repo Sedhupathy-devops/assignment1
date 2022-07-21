@@ -1,0 +1,28 @@
+- name: "INSTALL MONGODB | Install debian packages"
+  apt:
+    name: "{{ debian_packages }}"
+    state: present
+
+- name: "INSTALL MONGODB | Add apt key for MongoDB repository"
+  apt_key:
+    url: "{{ debian.apt_key_url }}"
+    state: present
+
+- name: "INSTALL MONGODB | Ensure MongoDB apt repository exists"
+  apt_repository:
+    repo: "{{ debian.apt_repository_repo }}"
+    state: present
+    filename: "mongodb-org-{{ mongodb_version }}"
+
+- name: "INSTALL MONGODB | Install MongoDB Packages"
+  apt:
+    name:
+      - "mongodb-org"
+    state: present
+
+- name: "INSTALL MONGODB | Install MongoDB Packages (Specific version)"
+  apt:
+    name:
+      - "mongodb-org={{ specific_mongodb_version }}"
+    state: present
+  when: specific_mongodb_version is defined

@@ -1,0 +1,9 @@
+- name: restart mongodb
+  service:
+    name: mongod
+    state: restarted
+
+- name: restart prometheus-mongodb-exporter
+  service:
+    name: prometheus-mongodb-exporter
+    state: restarted

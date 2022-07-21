@@ -1,0 +1,12 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: "Basic setup"
+      include_tasks: ./tasks/install-basic.yml
+
+    - name: "Setup Mongodb "
+      import_role:
+         name: "../../roles/mongodb_replica"
+
+    - name: "Setup Node Exporter"
+      include_tasks: ./tasks/node-exporter.yml

@@ -1,0 +1,27 @@
+---
+- name: "BASIC_SETUP | APT: Install aptitude package"
+  apt:
+    update_cache: yes
+    name: aptitude
+
+- name: "BASIC_SETUP | Upgrading all packages"
+  apt:
+    update_cache: yes
+    upgrade: "yes"       
+
+- name: "BASIC_SETUP | Install a few basic packages"
+  apt:
+    name: "{{ item.name }}"
+    state: "{{ item.state | default('present') }}"
+  with_items: "{{ basic_packages }}"
+
+- block:  
+  - name: "BASIC_SETUP |PPA and install its signing key"
+    apt_repository:
+      repo: "ppa:brightbox/ruby-ng"
+
+  - name: "BASIC_SETUP |Install ruby"
+    apt:
+      name: ruby2.7
+      state: "{{ ruby | default('present') }}"
+  when: inventory_hostname in groups.master
