@@ -1,0 +1,45 @@
+---
+- name: Ensure pip is installed
+  apt:
+    name: pip
+    state: present
+  become: yes
+
+- name: Ensure pymongo is installed
+  pip:
+    name: pymongo==3.12
+    state: present
+  become: yes
+
+- name: "INTIALIZE REPLICA | Create a replicaset"
+  community.mongodb.mongodb_replicaset:
+    login_host: localhost
+    replica_set: "{{ repl_set_name }}"
+    login_port: "{{ mongod_port }}"
+    members:
+    - host: "{{ hostvars[groups['master'][0]]['ansible_host'] }}:{{ mongod_port }}"
+      priority: 1
+    - host: "{{ hostvars[groups['replica'][0]]['ansible_host'] }}:{{ mongod_port }}"
+      priority: 0.5
+    - host: "{{ hostvars[groups['replica'][1]]['ansible_host'] }}:{{ mongod_port }}"
+      priority: 0.5
+  when: ansible_host == hostvars[groups['master'][0]]['ansible_host']
+
+- name: "INTIALIZE REPLICA | Wait for replicaset to converge"
+  community.mongodb.mongodb_status:
+    login_host: localhost
+    login_port: "{{ mongod_port }}"
+    replica_set: "{{ repl_set_name }}"
+    poll: 10
+    interval: 10
+  register: rs
+
+- name: "INTIALIZE REPLICA | Lookup PRIMARY replicaset member"
+  set_fact:
+    primary: "{{ outside_item.key.split(':')[0] }}"
+  loop: "{{ lookup('dict', rs.replicaset) }}"
+  loop_control:
+    loop_var: outside_item
+  when:
+    - outside_item.value == "PRIMARY"
+    

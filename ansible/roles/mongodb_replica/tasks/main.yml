@@ -1,0 +1,12 @@
+---
+- name: Install Mongodb
+  include_tasks: ./tasks/install-mongodb.yml
+
+- name: Configure Mongodb
+  include_tasks: ./tasks/configure-mongodb.yml
+
+- name: Initialize replicaset
+  include_tasks: ./tasks/replication.yml
+
+- name: Install & Configure prometheus-mongodb-exporter
+  include_tasks: ./tasks/prometheus-mongodb-exporter.yml

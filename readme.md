@@ -1,6 +1,6 @@
 # Assignment1
 
-Contains all Terraform resources and Ansible playbook to setup mongodb-replicaset
+This Repo Contains all Terraform resources and Ansible playbook to setup 3 node mongodb-replicaset
 
 - Terraform run provisions 3 node mongodb-replicaset
 - Ansible run configures 3 node mongodb-replicaset and intiates replica with mongodb-exporter and node-exporter enabled.
@@ -107,7 +107,7 @@ variable "instances" {
 ### To run Ansible playbook
 
 ```sh
-ansible-playbook run -i ansible/hosts.yml ansible/mongodb_replicaset.yml
+ansible-playbook -i ./ansible/hosts.yml ./ansible/playbooks/mongodb_replicaset.yml --private-key <ssh-pem-key>
 ```
 
 ### To add/remove dependency
@@ -118,4 +118,36 @@ basic_packages:
         state: present #change this to absent to remove
 
 ruby: present #change this to absent to remove ruby
+```
+### Ansible Run Report for ubuntu-20.04
+
+```txt
+PLAY RECAP ****************************************************************************************************
+mongo-rs-01                : ok=33   changed=23   unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+mongo-rs-02                : ok=30   changed=20   unreachable=0    failed=0    skipped=4    rescued=0    ignored=0   
+mongo-rs-03                : ok=30   changed=20   unreachable=0    failed=0    skipped=4    rescued=0    ignored=0   
+
+Playbook run took 0 days, 0 hours, 5 minutes, 23 seconds
+Friday 22 July 2022  01:10:54 +0530 (0:00:01.657)       0:05:23.359 *********** 
+=============================================================================== 
+BASIC_SETUP | Upgrading all packages ----------------------------------------------------------------- 115.51s
+../../roles/mongodb_replica : Ensure pip is installed ------------------------------------------------- 41.83s
+BASIC_SETUP | APT: Install aptitude package ----------------------------------------------------------- 33.95s
+../../roles/mongodb_replica : INSTALL MONGODB | Install MongoDB Packages ------------------------------ 19.39s
+BASIC_SETUP | Install a few basic packages ------------------------------------------------------------ 12.79s
+../../roles/mongodb_replica : INTIALIZE REPLICA | Wait for replicaset to converge --------------------- 12.36s
+BASIC_SETUP |Install ruby ----------------------------------------------------------------------------- 10.47s
+BASIC_SETUP |PPA and install its signing key ----------------------------------------------------------- 9.36s
+../../roles/mongodb_replica : MONGODB-EXPORTER | download node exporter -------------------------------- 9.02s
+../../roles/mongodb_replica : INSTALL MONGODB | Ensure MongoDB apt repository exists ------------------- 7.21s
+NODE EXPORTER | download node exporter ----------------------------------------------------------------- 5.17s
+../../roles/mongodb_replica : INSTALL MONGODB | Install debian packages -------------------------------- 4.69s
+../../roles/mongodb_replica : Ensure pymongo is installed ---------------------------------------------- 4.64s
+Gathering Facts ---------------------------------------------------------------------------------------- 4.48s
+../../roles/mongodb_replica : INSTALL MONGODB | Add apt key for MongoDB repository --------------------- 4.47s
+../../roles/mongodb_replica : MONGODB-EXPORTER | configure prometheus-mongodb-exporter ----------------- 3.13s
+NODE EXPORTER |unarchive node exporter ----------------------------------------------------------------- 3.07s
+../../roles/mongodb_replica : CONFIGURE_MONGODB | Copy config file ------------------------------------- 3.05s
+../../roles/mongodb_replica : CONFIGURE_MONGODB | Copy keyfile to host --------------------------------- 2.98s
+NODE EXPORTER | install unit file to systemd ----------------------------------------------------------- 2.93s
 ```
