@@ -25,3 +25,4 @@
       name: ruby2.7
       state: "{{ ruby | default('present') }}"
   when: inventory_hostname in groups.master
+  
