@@ -42,3 +42,4 @@
     loop_var: outside_item
   when:
     - outside_item.value == "PRIMARY"
+    
