@@ -3,7 +3,7 @@
 Contains all Terraform resources and Ansible playbook to setup mongodb-replicaset
 
 - Terraform run provisions 3 node mongodb-replicaset
-- Ansible run configures 3 node mongodb-replicaset and intiates replica with mongodb-exporter and node-exporter
+- Ansible run configures 3 node mongodb-replicaset and intiates replica with mongodb-exporter and node-exporter enabled.
 
 Playbook tested against ubuntu-18.04 & ubuntu-20.04
 
@@ -41,14 +41,13 @@ Playbook tested against ubuntu-18.04 & ubuntu-20.04
     └── variables.tf
 ```
 
-## Ansible-Inventory Format
+## Sample Ansible-Inventory Format
 
 ```yml
 all:
   vars:
     ansible_user: ubuntu
     node_exporter_version: 1.1.2
-    ruby_version: 2.7.5
     basic_packages:
       - name: tmux
         state: present
@@ -80,7 +79,7 @@ prometheus_node_exporter: 9100
 
 ## To open Ports
 
-```json
+```yml
 # modify in terraform/variables.tf
 variable "ingress_rules" {
   type = map(map(any))
@@ -93,7 +92,7 @@ variable "ingress_rules" {
 
 ## To modify vm_name and size 
 
-```json
+```yml
 # modify in terraform/variables.tf
 variable "instances" {
   type = map(map(any))
