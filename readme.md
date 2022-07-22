@@ -77,7 +77,7 @@ mongodb_exporter_port: 9200
 prometheus_node_exporter: 9100
 ```
 
-## To open Ports
+## To add/remove ingress rule
 
 ```yml
 # modify in terraform/variables.tf
