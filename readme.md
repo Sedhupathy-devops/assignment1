@@ -107,7 +107,15 @@ variable "instances" {
 ### To run Ansible playbook
 
 ```sh
-ansible-playbook -i ./ansible/hosts.yml ./ansible/playbooks/mongodb_replicaset.yml --private-key <ssh-pem-key>
+ansible-playbook run -i ansible/hosts.yml ansible/mongodb_replicaset.yml 
+```
+
+### Tags to run tasks individualy
+
+```yml
+--tags basic_setup  #to run dependency installation task
+--tags mongodb #to run mongodb role
+--tags node_exporter #to setup prometheus node exporter
 ```
 
 ### To add/remove dependency
